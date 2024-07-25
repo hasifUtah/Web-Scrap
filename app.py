@@ -28,31 +28,28 @@ def fetch_articles():
                 title = title_element.get_text(strip=True)
                 link = title_element['href']
                 
-                # If the link is relative, prepend the base URL
                 if link.startswith('/'):
                     link = base_url + link
 
-                # Attempt to find the publication date
                 date_element = item.find('time')
                 if date_element:
                     date_text = date_element.get_text(strip=True)
                     try:
                         date = datetime.strptime(date_text, '%B %d, %Y')
                     except ValueError:
-                        date = datetime.now()  # Fallback if date parsing fails
+                        date = datetime.now() 
                 else:
-                    date = datetime.now()  # Fallback if no date found
-                
+                    date = datetime.now() 
                 # Only keep articles from January 1, 2022 onwards
                 if date >= datetime(2022, 1, 1):
                     articles.append((title, link, date))
         
         # Find the next page URL
-        next_page = soup.find('a', class_='next')  # Update this class name as needed
+        next_page = soup.find('a', class_='next')  
         if next_page and 'href' in next_page.attrs:
             page_url = base_url + next_page['href']
         else:
-            page_url = None  # No more pages
+            page_url = None  
     
     print("Fetched Articles:", articles)
     articles.sort(key=lambda x: x[2], reverse=True)
